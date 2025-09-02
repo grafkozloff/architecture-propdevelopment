@@ -1,0 +1,91 @@
+# разрешение front-end подключения только к back-end-api
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-front-end-from-to-back-end-api
+spec:
+  podSelector:
+    matchLabels:
+      role: front-end
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              role: back-end-api
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              role: back-end-api
+---
+# разрешение admin-front-end подключения только к admin-back-end-api
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-admin-front-end-from-to-admin-back-end-api
+spec:
+  podSelector:
+    matchLabels:
+      role: admin-front-end
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              role: admin-back-end-api
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              role: admin-back-end-api
+---
+# разрешение back-end-api подключения только к front-end
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-back-end-api-from-to-front-end
+spec:
+  podSelector:
+    matchLabels:
+      role: back-end-api
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              role: front-end
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              role: front-end
+---
+# разрешение admin-back-end-api подключения только к admin-front-end
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-to-admin-back-end-api-from-admin-front-end
+spec:
+  podSelector:
+    matchLabels:
+      role: admin-back-end-api
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              role: admin-front-end
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              role: admin-front-end
