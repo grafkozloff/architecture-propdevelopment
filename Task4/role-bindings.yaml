@@ -1,0 +1,44 @@
+# Role binding for ReadOnlyUser role
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: read-only-role-binding
+  namespace: tenant-core-app
+subjects:
+  - kind: User
+    name: business-analyst-user
+roleRef:
+  kind: Role
+  name: read-only-role
+  apiGroup: rbac.authorization.k8s.io
+---
+# Role binding for Developer role
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: developer-role-binding
+  namespace: tenant-core-app
+subjects:
+  - kind: User
+    name: developer-user
+roleRef:
+  kind: Role
+  name: developer-role
+  apiGroup: rbac.authorization.k8s.io
+---
+# ClusterRoleBinding for ClusterManager role
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: cluster-manager-role-binding
+subjects:
+  - kind: User
+    name: support-user
+  - kind: User
+    name: devops-user
+  - kind: User
+    name: product-owner-user
+roleRef:
+  kind: ClusterRole
+  name: cluster-manager-role
+  apiGroup: rbac.authorization.k8s.io
