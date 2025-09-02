@@ -1,0 +1,34 @@
+# Role definition for ReadOnlyUser
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: read-only-role
+  namespace: tenant-core-app
+rules:
+  - apiGroups: ["", "apps", "batch", "extensions"] # All groups except secrets
+    resources: ["pods", "services", "configmaps", "persistentvolumeclaims", "events", "serviceaccounts", "endpoints"]
+    verbs: ["get", "list", "watch"]
+---
+# Role definition for Developer
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: developer-role
+  namespace: tenant-core-app
+rules:
+  - apiGroups: ["", "apps", "batch", "extensions"] # All groups except secrets
+    resources: ["*"] # All resources in this namespace
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  - apiGroups: [""] # Exclude access to sensitive resources like secrets
+    resources: ["secrets"]
+    verbs: [""]
+---
+# Cluster-wide role definition for ClusterManager
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cluster-manager-role
+rules:
+  - apiGroups: ["*"] # All groups including secrets
+    resources: ["*"] # All resources globally
+    verbs: ["*"]     # Full CRUD operations on everything
